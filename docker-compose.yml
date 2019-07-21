@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  web:
+    build: docker_files/web/
+    volumes:
+      - ./src/:/src/
+      - ./docker_files/web/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
+    ports:
+      - 80:80
+  web-test:
+    build: docker_files/web/
+    volumes:
+      - ./src/:/src/
+      - ./docker_files/web/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
+  db:
+    image: mysql/mysql-server:8.0-aarch64
+    # user: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: pass
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_ROOT_HOST: '%'
+    ports: 
+      - 3306:3306
+    volumes:
+      - ./docker_files/db/mysql_files/:/var/lib/mysql
+      - ./docker_files/db/my.cnf:/etc/my.cnf
